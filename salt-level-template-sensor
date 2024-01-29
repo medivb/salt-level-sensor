@@ -1,0 +1,1 @@
+{{ 100 - ((float(states('sensor.water_purifier_sensors_distance'), 0) / 275) * 100)}}
