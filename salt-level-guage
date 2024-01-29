@@ -1,0 +1,10 @@
+type: gauge
+entity: sensor.zoutniveau_waterfilter
+severity:
+  green: 50
+  yellow: 20
+  red: 0
+min: 0
+max: 100
+needle: true
+name: Zoutniveau
