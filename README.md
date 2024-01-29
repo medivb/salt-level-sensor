@@ -17,6 +17,7 @@ My idea was to find a sensor that I could mount to the lid of the container and 
 <li>LED: This is a standard RGB LED</li>
 </lu>
 
+
 After creating the configuration in ESP Home and connecting the sensors, LED and buzzer, I used a hot-glue gun to fix everything in place and it has been working fine like that for a few weeks now.
 
 <b>Intepretation of the data:</b>
