@@ -1,0 +1,23 @@
+type: entities
+entities:
+  - entity: update.water_purifier_sensors_firmware
+    name: Firmware
+  - entity: sensor.water_purifier_sensors_esphome_version
+    name: ESPHome Version
+  - entity: sensor.water_purifier_sensors_connected_ssid
+    name: Connected SSID
+  - entity: sensor.water_purifier_sensors_ip_address
+    name: IP Address
+  - entity: sensor.water_purifier_sensors_wifi_signal
+    name: WiFi Signal
+  - entity: switch.water_purifier_sensors_buzzer_enabled
+    name: Buzzer Enabled
+  - entity: button.water_purifier_sensors_restart
+    name: Restart
+  - entity: sensor.water_purifier_sensors_distance
+    name: Distance
+  - entity: light.water_purifier_sensors_led
+    name: LED
+title: Waterfilter
+state_color: true
+show_header_toggle: false
