@@ -1,0 +1,131 @@
+esphome:
+  name: water-purifier-sensors
+  friendly_name: Water Purifier Sensors
+# This is where the custom component is included.
+  includes:
+    - tof_vl53l1x.h
+# Also, it requires these libraries to be loaded.
+  libraries:
+    - Wire
+    - "pololu/VL53L1X@1.3.1"
+  on_boot:
+    priority: -10
+    then:
+    - wait_until:
+        api.connected:
+    - logger.log: API is connected!
+    - rtttl.play: "success:d=24,o=5,b=100:c,g,b"
+    - switch.turn_on: buzzer_enabled
+  project:
+    name: Broeks.Purifier_Sensors
+    version: "1.0"
+  platform: ESP8266
+  board: d1_mini
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "qZtVspOTTnmEjVYqYAU9jacQRJo60r8PRIXLh7ilxis="
+
+ota:
+  password: "b88935f0f38e0515c6a2806219064e80"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Water-Purifier-Sensors"
+    password: "tNnNxJmV8BoU"
+
+captive_portal:
+
+# i2c bus is used by the TOF sensor. Frequency is a custom setting.
+i2c:
+  sda: 4
+  scl: 5
+  scan: True
+  frequency: 400kHz
+
+# Define the buzzer output
+output:
+- platform: esp8266_pwm
+  pin: D7
+  id: buzzer
+
+# Define buzzer as output for RTTTL
+rtttl:
+  output: buzzer
+
+# Configure LED
+light:
+- platform: neopixelbus
+  variant: WS2812
+  pin: D8
+  num_leds: 1
+  flash_transition_length: 500ms
+  type: GRB
+  id: activity_led
+  name: "LED"
+  restore_mode: ALWAYS_OFF
+
+# Define switches to control LED and buzzer from HA
+switch:
+- platform: template
+  name: "Buzzer Enabled"
+  id: buzzer_enabled
+  icon: mdi:volume-high
+  optimistic: true
+  restore_mode: "RESTORE_DEFAULT_ON"
+  entity_category: config
+
+# My standard button to restart the device
+button:
+  - platform: restart
+    name: "Restart"
+
+sensor:
+# I also always add the wifi details as a standard sensor
+  - platform: wifi_signal
+    name: "WiFi signal"
+    id: wifi_strength
+    icon: mdi:wifi-arrow-up-down
+    update_interval: 60s
+    entity_category: diagnostic
+# This is for the (custom) TOF sensor I used. I added some offset to counter for the distance between the top of the 
+# salt level and the lid.
+  - platform: custom
+    lambda: |-
+      auto my_sensor = new MyCustomSensor();
+      App.register_component(my_sensor);
+      return {my_sensor};
+    sensors:
+      name: "Distance"
+      accuracy_decimals: 0
+      unit_of_measurement: "mm"        
+      state_class: "measurement"
+      device_class: "distance"
+      filters:
+        - offset: -30
+
+# Again, my OCD-like mandatory sensors
+text_sensor:
+  - platform: version
+    hide_timestamp: false
+    name: "ESPHome Version"
+    entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+      icon: mdi:wifi
+      entity_category: diagnostic
+    ssid:
+      name: "Connected SSID"
+      icon: mdi:wifi-strength-2
+      entity_category: diagnostic
+
+    
