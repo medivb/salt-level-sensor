@@ -1,0 +1,56 @@
+alias: Zout niveau
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.zoutniveau_waterfilter
+condition: []
+action:
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.zoutniveau_waterfilter
+        above: 50
+    then:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          rgb_color:
+            - 119
+            - 187
+            - 65
+          brightness_pct: 50
+        target:
+          entity_id: light.water_purifier_sensors_led
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.zoutniveau_waterfilter
+        above: 20
+        below: 50
+    then:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          rgb_color:
+            - 255
+            - 170
+            - 0
+          brightness_pct: 50
+        target:
+          entity_id: light.water_purifier_sensors_led
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.zoutniveau_waterfilter
+        below: 20
+    then:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          rgb_color:
+            - 255
+            - 38
+            - 0
+          flash: long
+          brightness_pct: 50
+        target:
+          entity_id: light.water_purifier_sensors_led
+mode: single
