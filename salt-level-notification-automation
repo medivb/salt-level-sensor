@@ -1,0 +1,24 @@
+alias: "Melding zout bijvullen "
+description: ""
+trigger:
+  - platform: numeric_state
+    entity_id:
+      - sensor.zoutniveau_waterfilter
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+    below: 20
+condition: []
+action:
+  - service: notify.mobile_app_medi
+    metadata: {}
+    data:
+      message: Zoutniveau waterfilter onder 20%. Zo spoedig mogelijk bijvullen!
+      data:
+        push:
+          sound:
+            name: default
+            critical: 1
+            volume: 1
+mode: single
